@@ -7,14 +7,18 @@ class Defender {
         this.turnsWon = 0;
     }
 
-    buyDefense(defenseName) {
-        const defense = defenseCatalog.find(item => item.name == defenseName);
+    buyDefense(defenseType) {
+        if(defenseCatalog.findIndex(item => item.name == defenseType) == -1) {
+            console.log(`\"${defenseType}\" does not exist`);
+            return;
+        }
+        const defense = defenseCatalog.find(item => item.name == defenseType);
         if (defense && this.credits >= defense.cost) {
             this.credits -= defense.cost;
             this.inventory.push(defense);
-            console.log(`You bought ${defenseName}!`);
+            console.log(`You bought ${defenseType}!`);
         } else {
-            console.log(`You cannot afford ${defenseName}!`);
+            console.log(`You cannot afford ${defenseType}!`);
         }
     }
 
@@ -36,7 +40,14 @@ class Defender {
 
     defendAgainst(attackType) {
         const defense = this.inventory.find(item => item.counter == attackType);
-        const defenseType = prompt(`Select a defense: \n${this.inventory.map(item => item.name).join('\n')}`)
+        let defenseType = prompt(`Select a defense: \n${this.inventory.map(item => item.name).join('\n')}`);
+
+        while(defenseCatalog.findIndex(item => item.name == defenseType) == -1) {
+            console.log(`\"${defenseType}\" does not exist`);
+            alert(`\"${defenseType}\" does not exist. Try again`);
+            defenseType = prompt(`Select a defense: \n${this.inventory.map(item => item.name).join('\n')}`);
+        }
+
         let successProbability = 1.0; // base success probability of the attack
         this.inventory.splice(this.inventory.findIndex(item => item.name == defenseType), 1);
         console.log(`${this.name} performs ${defenseType}`);

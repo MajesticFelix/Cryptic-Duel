@@ -7,14 +7,18 @@ class Attacker {
         this.turnsWon = 0;
     }
 
-    buyAttack(attackName) {
-        const attack = attackCatalog.find(item => item.name == attackName);
+    buyAttack(attackType) {
+        if(attackCatalog.findIndex(item => item.name == attackType) == -1){
+            console.log(`\"${attackType}\" does not exist.`);
+            return;
+        }
+        const attack = attackCatalog.find(item => item.name == attackType);
         if (attack && this.credits >= attack.cost) {
             this.credits -= attack.cost;
             this.inventory.push(attack);
-            console.log(`You bought ${attackName}!`);
+            console.log(`You bought ${attackType}!`);
         } else {
-            console.log(`You cannot afford ${attackName}!`);
+            console.log(`You cannot afford ${attackType}!`);
         }
     }
 

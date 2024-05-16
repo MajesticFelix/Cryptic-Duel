@@ -9,8 +9,8 @@ class Game {
     }
 
     initialize() {
-        let name1 = "felix"; //temp
-        let name2 = "lin han" //temp
+        let name1 = prompt("Player 1 Name:"); 
+        let name2 = prompt("Player 2 Name"); 
 
         let coinFlip = Math.floor(Math.random()*2); //Decides who goes first of the two players
         if(coinFlip == 0) { 
@@ -42,7 +42,7 @@ class Game {
         console.log("Buy Phase: ");
         console.log(`${player.name} has ${player.credits} credits.`)
         while (!stopPurchasing) {
-            const choice = prompt(`${player.name}, choose a ${type} to buy, type 'draw' for a random draw (100 credits), type 'view' to view inventory, or type 'done' to stop purchasing: \n${catalog.map(item => `${item.name} (${item.cost} credits)`).join('\n')}`);
+            const choice = prompt(`${player.name}, choose a ${type} to buy, type 'draw' for a random draw (200 credits), type 'view' to view inventory, or type 'done' to stop purchasing: \n${catalog.map(item => `${item.name} (${item.cost} credits)`).join('\n')}`);
             if (choice.toLowerCase() == "draw") {
                 player.randomDraw();
             } else if (choice.toLowerCase() == "view") {
@@ -61,7 +61,12 @@ class Game {
 
     turn() {
         console.log(`Turn ${this.currentTurn} started`);
-        const attackType = prompt(`Select an attack: \n${this.attacker.inventory.map(item => item.name).join('\n')}`)   
+        let attackType = prompt(`Select an attack: \n${this.attacker.inventory.map(item => item.name).join('\n')}`);
+        while(this.attacker.inventory.findIndex(item => item.name == attackType) == -1) {
+            console.log(`\"${attackType}\" does not exist.`);
+            alert(`\"${attackType}\" does not exist. Try again`);
+            attackType = prompt(`Select an attack: \n${this.attacker.inventory.map(item => item.name).join('\n')}`);
+        }  
         this.attacker.performAttack(this.defender, attackType);
         this.currentTurn++;
         if(this.currentTurn == 4){ // Triggers end round after turn count passes 4 turns
