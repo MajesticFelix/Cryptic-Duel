@@ -1,16 +1,17 @@
 const attackCatalog = [
-    { name: "Phishing Attack", cost: 100 },         
-    { name: "SQL Injection", cost: 250 },           
-    { name: "DDoS Attack", cost: 300 },             
-    { name: "Spoofing", cost: 150 },                
-    { name: "Man-in-the-Middle", cost: 250 },       
-    { name: "XSS (Cross-Site Scripting)", cost: 200 }, 
-    { name: "Social Engineering", cost: 100 },      
-    { name: "Physical Security Flaw", cost: 300 },  
-    { name: "Weak Configuration/Permissions", cost: 150 }, 
-    { name: "Lack of Awareness", cost: 50 },        
-    { name: "Insecure Wifi", cost: 200 },           
-    { name: "Zero Day Exploit", cost: 400 }         
+    { name: "Phishing Attack", cost: 100 },
+    { name: "SQL Injection", cost: 250 },
+    { name: "DDoS Attack", cost: 300 },
+    { name: "Spoofing", cost: 150 },
+    { name: "Man-in-the-Middle", cost: 250 },
+    { name: "XSS (Cross-Site Scripting)", cost: 200 },
+    { name: "Social Engineering", cost: 100 },
+    { name: "Physical Security Flaw", cost: 300 },
+    { name: "Weak Configuration/Permissions", cost: 150 },
+    { name: "Lack of Awareness", cost: 50 },
+    { name: "Insecure Wifi", cost: 200 },
+    { name: "Zero Day Exploit", cost: 400 },
+    { name: "Default Attack", cost: 0 } // Default attack
 ];
 
 const defenseCatalog = [
@@ -25,5 +26,6 @@ const defenseCatalog = [
     { name: "Configuration Management", cost: 150, counter: "Weak Configuration/Permissions", effectiveness: "high" },
     { name: "Employee Training Programs", cost: 50, counter: "Lack of Awareness", effectiveness: "high" },
     { name: "Secure Wifi Setup", cost: 200, counter: "Insecure Wifi", effectiveness: "high" },
-    { name: "Patch Management", cost: 400, counter: "Zero Day Exploit", effectiveness: "high" }
+    { name: "Patch Management", cost: 400, counter: "Zero Day Exploit", effectiveness: "high" },
+    { name: "Default Defense", cost: 0, effectiveness: "low" } // Default defense
 ];

@@ -8,22 +8,27 @@ class Defender {
     }
 
     buyDefense(defenseType) {
-        if(defenseCatalog.findIndex(item => item.name == defenseType) == -1) {
-            console.log(`\"${defenseType}\" does not exist`);
+        const defense = defenseCatalog.find(item => item.name === defenseType);
+        if (!defense) {
+            logToConsole(`"${defenseType}" does not exist`);
             return;
         }
-        const defense = defenseCatalog.find(item => item.name == defenseType);
-        if (defense && this.credits >= defense.cost) {
+        if (this.credits >= defense.cost) {
             this.credits -= defense.cost;
             this.inventory.push(defense);
-            console.log(`You bought ${defenseType}!`);
+            logToConsole(`You bought ${defenseType}!`);
         } else {
-            console.log(`You cannot afford ${defenseType}!`);
+            logToConsole(`You cannot afford ${defenseType}!`);
         }
     }
 
     viewInventory() {
-        console.log(`${this.name}'s Inventory: ${this.inventory.map(item => item.name).join('\n')}`);
+        if (this.inventory.length > 0) {
+            logToConsole(`${this.name}'s Inventory:`);
+            this.inventory.forEach(item => logToConsole(`${item.name} - ${item.cost} credits`));
+        } else {
+            logToConsole(`${this.name}'s inventory is empty.`);
+        }
     }
 
     randomDraw() {
@@ -32,25 +37,31 @@ class Defender {
             this.credits -= drawCost;
             const randomDefense = defenseCatalog[Math.floor(Math.random() * defenseCatalog.length)];
             this.inventory.push(randomDefense);
-            console.log(`${this.name} drew a random defense: ${randomDefense.name}`);
+            logToConsole(`${this.name} drew a random defense: ${randomDefense.name}`);
         } else {
-            console.log(`${this.name} cannot afford a random draw`);
+            logToConsole(`${this.name} cannot afford a random draw`);
         }
     }
 
-    defendAgainst(attackType) {
-        const defense = this.inventory.find(item => item.counter == attackType);
-        let defenseType = prompt(`Select a defense: \n${this.inventory.map(item => item.name).join('\n')}`);
+    defendAgainst(attackType, defenseType) {
+        let defense = this.inventory.find(item => item.counter == attackType);
 
-        while(defenseCatalog.findIndex(item => item.name == defenseType) == -1) {
-            console.log(`\"${defenseType}\" does not exist`);
+        while (defenseCatalog.findIndex(item => item.name == defenseType) == -1) {
+            if (defenseType.toLowerCase() == "default") {
+                break;
+            }
+            logToConsole(`\"${defenseType}\" does not exist`);
             alert(`\"${defenseType}\" does not exist. Try again`);
-            defenseType = prompt(`Select a defense: \n${this.inventory.map(item => item.name).join('\n')}`);
+            defenseType = prompt(`Select a defense (type 'default' for default defense): \n${this.inventory.map(item => item.name).join('\n')}`);
+        }
+
+        if (defenseType == "default") {
+           defenseType = "Default Defense";
         }
 
         let successProbability = 1.0; // base success probability of the attack
         this.inventory.splice(this.inventory.findIndex(item => item.name == defenseType), 1);
-        console.log(`${this.name} performs ${defenseType}`);
+        logToConsole(`${this.name} performs ${defenseType}`);
 
         if (defense) {
             this.inventory = this.inventory.filter(item => item != defense);

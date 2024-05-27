@@ -4,14 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cryptic Duel</title>
-    <link href="style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Cryptic Duel</h1>
-    <button id="startGame">Start Game</button>
-    <h2>Open Console: Press F12</h2>
-    <h2>*Case Sensitive*</h2>
-    <script src="main.js"></script>
+    <div id="game-container">
+        <header>
+            <h1>Cryptic Duel</h1>
+        </header>
+        <main id="console"></main>
+        <footer id="input-container">
+            <div id="command-container">
+                <input type="text" id="input" placeholder="Enter your command">
+                <button id="send-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M12 3l9.5 18H2.5L12 3zM12 7.55L5.4 19h13.2L12 7.55z"/>
+                    </svg>
+                </button>
+            </div>
+        </footer>
+    </div>
     <script src="game.js"></script>
     <script src="attacker.js"></script>
     <script src="defender.js"></script>
