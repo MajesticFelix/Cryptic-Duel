@@ -71,7 +71,7 @@ class Game {
             logToConsole(`Buy Phase: \n${this.defender.name} has ${this.defender.credits} credits. Choose a defense to buy, type 'draw' for a random draw (200 credits), type 'view' to view inventory, or type 'done' to stop purchasing: \n${defenseCatalog.map(item => `${item.name} (${item.cost} credits)`).join('\n')}`);
             this.setInputHandler(this.handleBuyPhaseInput.bind(this, this.defender, defenseCatalog, 'defense', () => {
                 if (isSpecialTurn) {
-                    this.restorePrices();
+                    this.restorePrices(specialMultiplier);
                 }
                 this.turn();
             }));
@@ -127,8 +127,10 @@ class Game {
         const success = this.defender.defendAgainst(attackType, input);
         if (success) {
             logToConsole(`${this.defender.name} defended successfully!`);
+            this.defender.turnsWon++;
         } else {
             logToConsole(`${this.defender.name} failed to defend!`);
+            this.attacker.turnsWon++;
         }
         this.currentTurn++;
         if (this.currentTurn == 4) {
@@ -167,6 +169,8 @@ class Game {
                 this.defender.credits += 1000;
                 this.attacker.credits += 750;
             }
+            this.attacker.turnsWon = 0;
+            this.defender.turnsWon = 0;
             this.round++;
             this.startRound();
         }
