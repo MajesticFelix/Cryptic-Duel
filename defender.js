@@ -51,8 +51,6 @@ class Defender {
                 break;
             }
             logToConsole(`\"${defenseType}\" does not exist`);
-            alert(`\"${defenseType}\" does not exist. Try again`);
-            defenseType = prompt(`Select a defense (type 'default' for default defense): \n${this.inventory.map(item => item.name).join('\n')}`);
         }
 
         if (defenseType == "default") {
