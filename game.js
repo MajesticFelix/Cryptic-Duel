@@ -68,7 +68,7 @@ class Game {
         }
 
         this.setInputHandler(this.handleBuyPhaseInput.bind(this, this.attacker, attackCatalog, 'attack', () => {
-            logToConsole(`Buy Phase: \n${this.defender.name} has ${this.defender.credits} credits. Choose a defense to buy, type 'draw' for a random draw (200 credits), type 'view' to view inventory, or type 'done' to stop purchasing: \n${defenseCatalog.map(item => `${item.name} (${item.cost} credits)`).join('\n')}`);
+            logToConsole(`Buy Phase: \n${this.defender.name} has ${this.defender.credits} credits. Choose a defense to buy, type 'draw' for a random draw (200 credits), type 'view' to view inventory, or type 'done' to stop purchasing: \n${defenseCatalog.slice(0, -1).map(item => `${item.name} (${item.cost} credits)`).join('\n')}`);
             this.setInputHandler(this.handleBuyPhaseInput.bind(this, this.defender, defenseCatalog, 'defense', () => {
                 if (isSpecialTurn) {
                     this.restorePrices(specialMultiplier);
@@ -76,7 +76,7 @@ class Game {
                 this.turn();
             }));
         }));
-        logToConsole(`Buy Phase: \n${this.attacker.name} has ${this.attacker.credits} credits. Choose a attack to buy, type 'draw' for a random draw (200 credits), type 'view' to view inventory, or type 'done' to stop purchasing: \n${attackCatalog.map(item => `${item.name} (${item.cost} credits)`).join('\n')}`);
+        logToConsole(`Buy Phase: \n${this.attacker.name} has ${this.attacker.credits} credits. Choose a attack to buy, type 'draw' for a random draw (200 credits), type 'view' to view inventory, or type 'done' to stop purchasing: \n${attackCatalog.slice(0, -1).map(item => `${item.name} (${item.cost} credits)`).join('\n')}`);
     }
 
     handleBuyPhaseInput(player, catalog, type, callback, input) {
@@ -113,7 +113,6 @@ class Game {
                 attackType = 'Default Attack';
             } else {
                 logToConsole(`\"${attackType}\" does not exist.`);
-                logToConsole(`Select an attack (type 'default' for default attack): \n${this.attacker.inventory.map(item => item.name).join('\n')}`);
                 return;
             }
         }
@@ -123,6 +122,15 @@ class Game {
     }
 
     handleDefenseInput(input) {
+        let defenseType = input.trim();
+        if (this.defender.inventory.findIndex(item => item.name == defenseType) == -1) {
+            if (defenseType.toLowerCase() == 'default') {
+                defenseType = 'Default Defense';
+            } else {
+                logToConsole(`\"${defenseType}\" does not exist.`);
+                return;
+            }
+        }
         const attackType = this.attacker.currentAttack;
         const success = this.defender.defendAgainst(attackType, input);
         if (success) {
@@ -178,27 +186,43 @@ class Game {
 
     switchSides() {
         logToConsole("Switching Sides");
-        const attackWon = this.attacker.roundsWon; // create temp variables to keep scores and names before switching
+        
+        const attackWon = this.attacker.roundsWon;
         const defendWon = this.defender.roundsWon;
         const attackName = this.attacker.name;
         const defendName = this.defender.name;
-
-        const newAttacker = new Defender(); // Switch the roles
+        const attackInventory = this.attacker.inventory;
+        const defendInventory = this.defender.inventory;
+        const attackCredits = this.attacker.credits;
+        const defendCredits = this.defender.credits;
+    
+        const newAttacker = new Defender();
         const newDefender = new Attacker();
+    
+        this.attacker = newDefender;
+        this.defender = newAttacker;
 
-        this.attacker = newAttacker;
-        this.defender = newDefender;
-
-        this.attacker.roundsWon = defendWon; // Keep scores
+        this.attacker.roundsWon = defendWon;
         this.defender.roundsWon = attackWon;
-        this.attacker.name = defendName; // Switch names
+        this.attacker.name = defendName;
         this.defender.name = attackName;
+        this.attacker.inventory = defendInventory;
+        this.defender.inventory = attackInventory;
+        this.attacker.credits = defendCredits;
+        this.defender.credits = attackCredits;
+    
+        logToConsole(`New Attacker: ${this.attacker.name} (Rounds Won: ${this.attacker.roundsWon}, Credits: ${this.attacker.credits})`);
+        logToConsole(`New Defender: ${this.defender.name} (Rounds Won: ${this.defender.roundsWon}, Credits: ${this.defender.credits})`);
         
+        // Reset credits if in overtime
         if(this.overtime) {
             this.attacker.credits = 1000;
             this.defender.credits = 1000;
         }
+    
+        this.startRound();
     }
+    
 }
 
 let messageCount = 0;
@@ -222,7 +246,6 @@ function logToConsole(message) {
     consoleElement.appendChild(newMessage);
 
     typeWriterEffect(messageText, message);
-    consoleElement.scrollTop = consoleElement.scrollHeight;
 }   
 
 function typeWriterEffect(element, text) {
@@ -240,6 +263,8 @@ function typeWriterEffect(element, text) {
         if (index < length) {
             element.textContent += text.charAt(index);
             index++;
+            const consoleElement = document.getElementById('console');
+            consoleElement.scrollTop = consoleElement.scrollHeight;
             setTimeout(typeCharacter, baseSpeed);
         }
     }

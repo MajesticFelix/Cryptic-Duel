@@ -45,6 +45,7 @@ class Attacker {
 
     performAttack(defender, attackType) {
         let attack = this.inventory.find(item => item.name === attackType) || attackCatalog.find(item => item.name === "Default Attack");
+        this.inventory.splice(this.inventory.findIndex(item => item.name == attack), 1);
         if (attackType.toLowerCase() === "default") {
             attack = attackCatalog.find(item => item.name === "Default Attack");
         }

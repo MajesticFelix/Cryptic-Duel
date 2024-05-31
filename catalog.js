@@ -11,7 +11,7 @@ const attackCatalog = [
     { name: "Lack of Awareness", cost: 50 },
     { name: "Insecure Wifi", cost: 200 },
     { name: "Zero Day Exploit", cost: 400 },
-    { name: "Default Attack", cost: 0 } // Default attack
+    { name: "Default Attack", cost: 0 } // Default attack (this is hidden)
 ];
 
 const defenseCatalog = [
@@ -27,5 +27,5 @@ const defenseCatalog = [
     { name: "Employee Training Programs", cost: 50, counter: "Lack of Awareness", effectiveness: "high" },
     { name: "Secure Wifi Setup", cost: 200, counter: "Insecure Wifi", effectiveness: "high" },
     { name: "Patch Management", cost: 400, counter: "Zero Day Exploit", effectiveness: "high" },
-    { name: "Default Defense", cost: 0, effectiveness: "low" } // Default defense
+    { name: "Default Defense", cost: 0, effectiveness: "low" } // Default defense (this is hidden)
 ];
